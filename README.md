@@ -220,7 +220,7 @@ zhdate-ai-calendar
 ---
 
 # 📷 Product Demo
-
+<img src="demo.gif.GIF" width="800">
 
 ## Home Interface
 
