@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f1e7">
+  <meta name="description" content="ZhDate，一款温柔、简单的手绘风智能日程助手。">
+  <title>ZhDate · 把日子过成喜欢的样子</title>
+  <link rel="icon" href="zh-favicon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+  <div class="doodle doodle-one" aria-hidden="true">✿</div>
+  <div class="doodle doodle-two" aria-hidden="true">⌁</div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="ZhDate 首页">
+      <span class="brand-mark" aria-hidden="true">zZ</span>
+      <span>
+        <strong>ZhDate</strong>
+        <small>温柔安排每一天</small>
+      </span>
+    </a>
+    <nav class="top-actions" aria-label="页面工具">
+      <span class="api-status" id="apiStatus" data-state="checking" title="DeepSeek 服务状态">
+        <i aria-hidden="true"></i><span id="apiStatusText">正在连接 DeepSeek</span>
+      </span>
+      <button class="text-button" id="todayBtn" type="button">回到今天</button>
+      <button class="icon-button" id="exportBtn" type="button" aria-label="导出日程" title="导出日程">⇩</button>
+      <label class="icon-button file-button" aria-label="导入日程" title="导入日程">⇧<input id="importInput" type="file" accept="application/json"></label>
+    </nav>
+  </header>
+
+  <main class="page-shell">
+    <section class="welcome-card hand-card">
+      <div class="welcome-copy">
+        <p class="eyebrow" id="fullDate">今天也要好好生活</p>
+        <h1><span id="greeting">下午好</span>，<br>把想做的事交给我吧。</h1>
+        <p id="dailyQuote">慢一点也没关系，我们把今天过好。</p>
+
+        <form id="aiSubmitForm" class="smart-form">
+          <label for="taskInput">一句话记下日程</label>
+          <div class="smart-input-wrap">
+            <span aria-hidden="true">✎</span>
+            <input id="taskInput" type="text" placeholder="例如：明天下午 3 点交设计稿" autocomplete="off">
+            <button id="sendBtn" type="submit">帮我记下 <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="quick-examples" aria-label="快捷示例">
+            <button type="button" data-prompt="今天 19:00 去散步">今晚散步</button>
+            <button type="button" data-prompt="明天 09:30 开周会">明早周会</button>
+            <button type="button" data-prompt="周六 14:00 喝下午茶">周末约会</button>
+          </div>
+        </form>
+      </div>
+      <div class="welcome-art sticker-stage" aria-hidden="true">
+        <span class="crayon-loop loop-one"></span>
+        <span class="crayon-loop loop-two"></span>
+        <img class="sticker sticker-flower" src="assets/flower-sticker.png" alt="">
+        <img class="sticker sticker-strawberry" src="assets/strawberry-sticker.png" alt="">
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="calendar-column">
+        <section class="calendar-card hand-card" aria-labelledby="calendarTitle">
+          <img class="card-sticker calendar-pony" src="assets/pony-sticker.svg" alt="" aria-hidden="true">
+          <header class="section-heading calendar-heading">
+            <div>
+              <p class="eyebrow">MY CALENDAR</p>
+              <h2 id="calendarTitle">2026 年 7 月</h2>
+            </div>
+            <div class="calendar-controls">
+              <button id="prevMonth" type="button" aria-label="上个月">←</button>
+              <button id="nextMonth" type="button" aria-label="下个月">→</button>
+            </div>
+          </header>
+          <div class="week-header" aria-hidden="true">
+            <span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span><span>日</span>
+          </div>
+          <div id="calendarDays" class="date-grid" role="grid" aria-label="月历"></div>
+          <div class="calendar-legend"><span><i class="dot study"></i>学习</span><span><i class="dot life"></i>生活</span><span><i class="dot work"></i>工作</span><span><i class="dot other"></i>其他</span></div>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="today-card hand-card" aria-labelledby="todayTitle">
+          <img class="card-sticker today-berry" src="assets/strawberry-sticker.png" alt="" aria-hidden="true">
+          <header class="section-heading">
+            <div>
+              <p class="eyebrow">TODAY</p>
+              <h2 id="todayTitle">今日清单</h2>
+            </div>
+            <div class="progress-ring" id="progressRing" aria-label="今日完成进度"><span id="progressText">0%</span></div>
+          </header>
+          <div class="filter-row" role="group" aria-label="日程筛选">
+            <button class="filter-chip active" type="button" data-filter="all">全部</button>
+            <button class="filter-chip" type="button" data-filter="pending">待完成</button>
+            <button class="filter-chip" type="button" data-filter="done">已完成</button>
+          </div>
+          <div id="events" class="events-list"></div>
+          <button class="add-button" id="quickAddBtn" type="button"><span>＋</span> 手动添加日程</button>
+        </section>
+
+        <section class="little-card hand-card advice-card">
+          <img class="card-sticker note-flower" src="assets/flower-sticker.png" alt="" aria-hidden="true">
+          <span class="tape" aria-hidden="true"></span>
+          <p class="eyebrow">AI GENTLE NOTE</p>
+          <blockquote id="aiAdvice">“今天不需要完美，完成一件小事就很好。”</blockquote>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <dialog id="eventDialog" class="event-dialog">
+    <form id="eventForm" method="dialog">
+      <header>
+        <div><p class="eyebrow">NEW PLAN</p><h2 id="dialogTitle">添加日程</h2></div>
+        <button class="dialog-close" id="dialogClose" type="button" aria-label="关闭">×</button>
+      </header>
+      <input type="hidden" id="eventId">
+      <label>日程名称<input id="eventTitle" type="text" maxlength="60" placeholder="想做什么？" required></label>
+      <div class="form-row">
+        <label>日期<input id="eventDate" type="date" required></label>
+        <label>时间<input id="eventTime" type="time"></label>
+      </div>
+      <fieldset>
+        <legend>给它一个分类</legend>
+        <div class="category-options">
+          <label><input type="radio" name="category" value="study"><span>📖 学习</span></label>
+          <label><input type="radio" name="category" value="life" checked><span>🍵 生活</span></label>
+          <label><input type="radio" name="category" value="work"><span>💼 工作</span></label>
+          <label><input type="radio" name="category" value="other"><span>✨ 其他</span></label>
+        </div>
+      </fieldset>
+      <label>温柔提醒<textarea id="eventNote" rows="2" maxlength="120" placeholder="给未来的自己留句话（选填）"></textarea></label>
+      <div class="dialog-actions">
+        <button class="danger-button hidden" id="deleteEventBtn" type="button">删除</button>
+        <button class="save-button" type="submit">保存日程</button>
+      </div>
+    </form>
+  </dialog>
+
+  <button class="pet-companion" id="petCompanion" type="button" aria-label="和日期精灵互动">
+    <span class="pet-bubble" id="petBubble" aria-live="polite">今天也一起加油吧！</span>
+    <span class="pet-orb" aria-hidden="true"><i>✦</i><b></b><b></b><em>⌁</em></span>
+  </button>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
