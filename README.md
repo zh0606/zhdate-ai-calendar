@@ -285,6 +285,6 @@ Detailed product documents:
 
 # 👨‍💻 Author
 
-ZZH0606
+zh0606
 
 AI Product Design Project
